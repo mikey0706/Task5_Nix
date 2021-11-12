@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Task5_Nix.ViewModels.RoomInfo>
+
+@{
+    ViewData["Title"] = "AdminMainPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AdminMainPage</h1>
+
+<h2>Заказы администратора: </h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomCategory)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>Выручка за последний месяц - @ViewData["Profit"]</p>
+
+<p>
+@Html.ActionLink("Создать комнату", "CreateRoom", "Room") |
+@Html.ActionLink("Просмотреть забронированные номера", "BookingList", "Booking")
+</p>
+
+<br>
+<h5> Список существующих категорий: </h5>
+<br>
+
+@await Html.PartialAsync("~/Views/Category/CategoryList.cshtml", TempData["Categories"])

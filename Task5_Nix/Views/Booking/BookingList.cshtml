@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Task5_Nix.ViewModels.BookInfo>
+
+@{
+    ViewData["Title"] = "BookingList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>BookingList</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VisitorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoveIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoveOut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckedIn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoveIn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoveOut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckedIn)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditBooking", new { bookId = item.BookingId }, new { id = "bookId" }) |
+                @Html.ActionLink("Delete", "DeleteBooking", new { delId = item.BookingId }, new { id = "delId" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

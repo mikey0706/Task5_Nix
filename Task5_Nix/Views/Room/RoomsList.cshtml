@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Task5_Nix.ViewModels.RoomInfo>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomCategory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+                
+            @if (User.IsInRole("admin"))
+              {
+            <td>
+                @Html.ActionLink("BookRoom", "BookRoom", "Booking", new { roomId = item.Id }, new { id = "roomId" }) |
+                @Html.ActionLink("Edit", "EditRoom", "Room", new { key = item.Id }, new { id = "key" }) |
+                @Html.ActionLink("Delete", "DeleteRoom", "Room", new { keyId = item.Id }, new { id = "keyId" })
+            </td>
+              }
+            else 
+             {
+            <td>
+                @Html.ActionLink("BookRoom", "BookRoom", "Booking", new { roomId = item.Id }, new { id = "roomId" }) |
+            </td>
+            }
+
+        </tr>
+}
+    </tbody>
+</table>

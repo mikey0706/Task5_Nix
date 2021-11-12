@@ -1,0 +1,44 @@
+﻿@model Task5_Nix.ViewModels.BookRoomVM
+
+@{
+    ViewData["Title"] = "BookRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>BookRoom</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="BookRoom" , method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.HiddenFor(m => m.RoomFK, Model.RoomFK)
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomNumber" class="control-label"></label>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoveIn" class="control-label"></label>
+                <input asp-for="MoveIn" class="form-control" />
+                <span asp-validation-for="MoveIn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoveOut" class="control-label"></label>
+                <input asp-for="MoveOut" class="form-control" />
+                <span asp-validation-for="MoveOut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">@Model.Price</label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
