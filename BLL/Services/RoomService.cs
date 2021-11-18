@@ -95,7 +95,7 @@ namespace BLL.Services
             return Task.Run(() => res);
         }
 
-        public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime date) 
+        public Task<List<RoomDTO>> RoomsByDate(DateTime date) 
         {
             var bks = _db.Bookings.GetData().Where(d=>d.MoveIn.Date > date.Date).Select(k=>k.RoomFK).Distinct();
             var rooms = new List<Room>();
@@ -104,7 +104,7 @@ namespace BLL.Services
                 rooms.Add(_db.Rooms.GetData().FirstOrDefault(d=>d.RoomId == item));
             }
 
-            return Task.Run(()=>mapper.Map<IEnumerable<Room>, IEnumerable<RoomDTO>>(rooms));
+            return Task.Run(()=>mapper.Map<List<Room>, List<RoomDTO>>(rooms));
         }
 
     }

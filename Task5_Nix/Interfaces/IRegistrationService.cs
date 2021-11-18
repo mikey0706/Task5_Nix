@@ -6,8 +6,9 @@ using Task5_Nix.ViewModels;
 
 namespace Task5_Nix.Utils
 {
-    public interface ITokenService
+    public interface IRegistrationService
     {
-        public string GenerateJSONWebToken(string key, string issuer, UserLoginModel user);
+        public void GenerateJSONWebToken(string key, string issuer, IRegistrationData user);
+        public void RemoveCookie();
     }
 }

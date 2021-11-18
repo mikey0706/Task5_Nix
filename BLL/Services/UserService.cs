@@ -35,6 +35,7 @@ namespace BLL.Services
                  var v = mapper.Map<VisitorDTO, Visitor>(user);
                  v.PasswordHash = new PasswordHasher<Visitor>().HashPassword(v, password);
                  _db.Visitors.Add(v);
+
                  await _db.Save();
             }
             catch (Exception ex)
@@ -45,9 +46,9 @@ namespace BLL.Services
 
         }
 
-        public async Task<VisitorDTO> VerifyUser(string name, string password)
+        public async Task <VisitorDTO> VerifyUser(string name, string password)
         {
-            var user = await FindUserByName(name);
+            var user = await Task.Run(()=>_db.Visitors.GetData().FirstOrDefault(u => u.VisitorName.Equals(name)));
             if (user != null)
             {
                 var check = new PasswordHasher<Visitor>().VerifyHashedPassword(user, user.PasswordHash, password);
@@ -60,12 +61,6 @@ namespace BLL.Services
             }
 
             return null;
-        }
-
-        private Task<Visitor> FindUserByName(string name) 
-        {
-            var res = Task.Run(()=>_db.Visitors.GetData().FirstOrDefault(u => u.VisitorName.Equals(name)));
-            return res;
         }
 
         public async Task EditUser(VisitorDTO data)

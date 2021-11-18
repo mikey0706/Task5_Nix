@@ -15,6 +15,7 @@ using Task5_Nix.Utils;
 using Task5_Nix.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Task5_Nix.Controllers
 {
@@ -23,10 +24,10 @@ namespace Task5_Nix.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IUserService _userData;
-        private readonly ITokenService _tokenService;
+        private readonly IRegistrationService _tokenService;
         private readonly IMapper _mapper;
 
-        public HomeController(IConfiguration config, ITokenService tokenService, IUserService us)
+        public HomeController(IConfiguration config, IRegistrationService tokenService, IUserService us)
         {
             _config = config;
             _userData = us;
@@ -44,7 +45,8 @@ namespace Task5_Nix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterUser([FromForm]UserRegistrationModel data)
         {
-            try { 
+            try 
+            { 
             if (ModelState.IsValid && data.Password.Equals(data.RepeatPassword))
             {
                 if (data != null)
@@ -59,8 +61,8 @@ namespace Task5_Nix.Controllers
 
                     await _userData.AddUser(_mapper.Map<VisitorViewModel, VisitorDTO>(v), data.Password);
 
-                    var tokenString = _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
-                    HttpContext.Session.SetString("Token", tokenString);
+                    _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
+
                     return RedirectToAction("InitialPage", "Visitor");
 
 
@@ -87,33 +89,31 @@ namespace Task5_Nix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserLoginModel data)
+        public async Task<IActionResult> Login([FromForm] UserLoginModel data)
         {
-            try { 
-            if (ModelState.IsValid)
-            {
-                if (data != null)
-                {
-                    var user = await _userData.VerifyUser(data.UserName, data.Password);
+            try 
+            { 
+            if (ModelState.IsValid && data!=null)
+            { 
+                var user =  await _userData.VerifyUser(data.UserName, data.Password);
 
                     if (user != null)
                     {
-                        if (user.isAdmin)data.Role = "admin";
+                        if (user.isAdmin) data.Role = "admin";
 
-                        data.UserId = user.Id.ToString();
-          
-                        var tokenString = _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
-                        HttpContext.Session.SetString("Token", tokenString);
+                        data.UserId = user.Id;
+
+                        await Task.Run(()=>_tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data));
+
                         return RedirectToAction("InitialPage", "Visitor");
                     }
 
+                    ModelState.AddModelError("", "Имя пользователя или пароль введены не верно!");
+
                 }
 
-                ModelState.AddModelError("", "Имя пользователя или пароль введены не верно!");
-
-            }
-
             return View(data);
+
             }
             catch (Exception ex)
             {
@@ -124,15 +124,12 @@ namespace Task5_Nix.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            try { 
-            await HttpContext.SignOutAsync();
-
-            foreach (var cookie in Request.Cookies.Keys)
+            try 
             {
-                Response.Cookies.Delete(cookie);
-            }
 
-            return RedirectToAction("InitialPage", "Visitor");
+                await Task.Run(()=>_tokenService.RemoveCookie());
+
+                return RedirectToAction("InitialPage", "Visitor");
             }
             catch (Exception ex)
             {
