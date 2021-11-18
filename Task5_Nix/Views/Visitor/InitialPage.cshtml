@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Task5_Nix.ViewModels.RoomInfo>
+﻿@model BookingViewModel
 @{
     ViewData["Title"] = "InitialPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,8 +8,9 @@
     <div class="form-group">
         <input type="date" name="date" />
     </div>
-    <input type="submit" value="Поиск" class="btn btn-primary" />
-</form>
+<input type="submit" value="Поиск" class="btn btn-primary" />
 <div id="Results">
-    @{await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", Model);}
+    @{await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", TempData["RoomsInfo"]);}
 </div>
+</form>
+

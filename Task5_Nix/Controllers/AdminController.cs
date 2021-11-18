@@ -28,12 +28,11 @@ namespace Task5_Nix.Controllers
             _mapper = new Mapper(AutomapperConfig.Config);
         }
 
-        [HttpGet]
         public async Task<ActionResult> AdminMainPage() 
         {
-            var data = await _roomData.UserRooms("Admin");
+            var rooms = await _roomData.UserRooms("Admin");
             
-            var rooms = data.Select(d => new RoomInfo()
+            var model = rooms.Select(d => new RoomInfo()
             {
                 RoomNumber = d.RoomNumber,
                 RoomCategory = _categoryData.AllCategories()
@@ -44,14 +43,10 @@ namespace Task5_Nix.Controllers
 
             });
 
-            var categories = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories());
+            var mod = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories());
 
-            var model = new AdminPageViewModel() 
-            {
-                AdminRooms = rooms,
-                MonthProfit = _bookingData.GetProfit(),
-                Categories = categories
-            };
+            ViewData["Profit"] = _bookingData.GetProfit();
+            TempData["Categories"] = mod;
 
             return View(model);
         }

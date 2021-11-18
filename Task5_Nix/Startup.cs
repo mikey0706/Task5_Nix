@@ -5,15 +5,23 @@ using DAL.Context;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Task5_Nix.Utils;
 
 namespace Task5_Nix
@@ -30,12 +38,7 @@ namespace Task5_Nix
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
-            services.AddHttpContextAccessor();
-
             services.AddRazorPages();
-
 
             services.AddDbContext<HotelAppContext>(options => {
                 options.UseSqlServer(
@@ -50,7 +53,7 @@ namespace Task5_Nix
 
             ).AddEntityFrameworkStores<HotelAppContext>();
 
-           
+            services.AddControllersWithViews();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -62,16 +65,16 @@ namespace Task5_Nix
 
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<IRegistrationService, RegistrationService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<ICategoryDate, CategoryDateService>();
 
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            
 
             services.AddSession();
+
 
 
             services.AddAuthentication(option =>
@@ -122,7 +125,7 @@ namespace Task5_Nix
                 }
                 await next();
             });
-           
+      
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

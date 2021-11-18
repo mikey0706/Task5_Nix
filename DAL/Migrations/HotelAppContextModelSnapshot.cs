@@ -51,28 +51,28 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            BookingId = new Guid("9a8e8124-8bfb-45eb-b599-59e20c93ff32"),
+                            BookingId = new Guid("c825bc5e-5d66-45c5-a6dc-48264f20a325"),
                             CheckedIn = false,
                             MoveIn = new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MoveOut = new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoomFK = new Guid("042a583a-5c05-44a6-ba78-fd41762a1b2b"),
-                            VisitorFK = "3d7f5b47-80ff-4053-ad27-4c08a2d4b169"
+                            RoomFK = new Guid("74453052-d402-4e46-aab6-4be444548939"),
+                            VisitorFK = "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17"
                         },
                         new
                         {
-                            BookingId = new Guid("0c259969-6f58-4423-b4ec-13bb3c38ab84"),
+                            BookingId = new Guid("38e22402-fc4e-4597-b327-19e16c2f98ba"),
                             CheckedIn = false,
                             MoveIn = new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MoveOut = new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoomFK = new Guid("5adbc35e-2ed9-49c5-8f13-9e73ef13a3c2")
+                            RoomFK = new Guid("24333ab5-4b0b-4de4-a79e-de64e0b9ecae")
                         },
                         new
                         {
-                            BookingId = new Guid("ee8101f3-0e54-447e-aa95-dbbbd1870f1a"),
+                            BookingId = new Guid("55caf5b3-4c4c-49ab-9b31-ed1daf66a9b7"),
                             CheckedIn = false,
                             MoveIn = new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MoveOut = new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoomFK = new Guid("8001fea4-cd45-4567-a971-799845fa4ebd")
+                            RoomFK = new Guid("7995c775-423b-4d7a-951f-435f8fcf3704")
                         });
                 });
 
@@ -92,12 +92,12 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"),
+                            CategoryId = new Guid("96413316-ead3-40bc-9579-24666c7c1651"),
                             CategoryName = "Lux"
                         },
                         new
                         {
-                            CategoryId = new Guid("d1898851-efc1-452d-8565-16591b0f92ca"),
+                            CategoryId = new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"),
                             CategoryName = "Middle"
                         });
                 });
@@ -129,16 +129,16 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            CatDateId = new Guid("9afc4b05-7ec2-4898-9ef3-53f8cae90e8e"),
-                            CategoryFK = new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"),
+                            CatDateId = new Guid("aec940d8-a8bf-4931-a57d-9bdcafa1139c"),
+                            CategoryFK = new Guid("96413316-ead3-40bc-9579-24666c7c1651"),
                             EndDate = new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 2099,
                             StartDate = new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            CatDateId = new Guid("0559cda5-23e1-423f-af4d-748fe642333a"),
-                            CategoryFK = new Guid("d1898851-efc1-452d-8565-16591b0f92ca"),
+                            CatDateId = new Guid("740c3797-9d41-422f-b92b-efa06ba53877"),
+                            CategoryFK = new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"),
                             EndDate = new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 1099,
                             StartDate = new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -166,20 +166,20 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            RoomId = new Guid("042a583a-5c05-44a6-ba78-fd41762a1b2b"),
-                            CategoryFK = new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"),
+                            RoomId = new Guid("74453052-d402-4e46-aab6-4be444548939"),
+                            CategoryFK = new Guid("96413316-ead3-40bc-9579-24666c7c1651"),
                             RoomNumber = 1
                         },
                         new
                         {
-                            RoomId = new Guid("5adbc35e-2ed9-49c5-8f13-9e73ef13a3c2"),
-                            CategoryFK = new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"),
+                            RoomId = new Guid("24333ab5-4b0b-4de4-a79e-de64e0b9ecae"),
+                            CategoryFK = new Guid("96413316-ead3-40bc-9579-24666c7c1651"),
                             RoomNumber = 2
                         },
                         new
                         {
-                            RoomId = new Guid("8001fea4-cd45-4567-a971-799845fa4ebd"),
-                            CategoryFK = new Guid("d1898851-efc1-452d-8565-16591b0f92ca"),
+                            RoomId = new Guid("7995c775-423b-4d7a-951f-435f8fcf3704"),
+                            CategoryFK = new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"),
                             RoomNumber = 3
                         });
                 });
@@ -213,8 +213,8 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6cc728d8-0333-4f00-a0ae-787ca49e316e",
-                            ConcurrencyStamp = "d66f1d1b-fb87-4a10-bc97-4f2fc01606d5",
+                            Id = "d4b4d6d2-8661-4424-96c7-536d2c528db3",
+                            ConcurrencyStamp = "b8206897-683d-4bac-9a01-bacd4ab3b0e2",
                             Name = "admin",
                             NormalizedName = "admin"
                         });
@@ -378,8 +378,8 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "3d7f5b47-80ff-4053-ad27-4c08a2d4b169",
-                            RoleId = "6cc728d8-0333-4f00-a0ae-787ca49e316e"
+                            UserId = "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17",
+                            RoleId = "d4b4d6d2-8661-4424-96c7-536d2c528db3"
                         });
                 });
 
@@ -420,14 +420,14 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3d7f5b47-80ff-4053-ad27-4c08a2d4b169",
+                            Id = "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cde31f97-1cff-4a8f-80ac-b43698f9a3b8",
+                            ConcurrencyStamp = "87953e8c-ae5d-46ed-b8ba-9c8e21349d1e",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEJlr0YWEhs+MP1CGEYxf2EUWWqGsXsUP1J4r/j7Z3zm+XVC+UmNSN6iqXrlg60ZLBw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDf9HDabtSTQ7FG2LNo+eNXXz1gSQN0unSk4r8eWZ+H4RVzKAV1LSUbM0QgajBWHAw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "69631002-b61f-41e2-8ab3-9c9f35903419",
+                            SecurityStamp = "b7ae5cc6-8ce1-4f6a-bc32-764d2e527914",
                             TwoFactorEnabled = false,
                             VisitorName = "Admin",
                             isAdmin = true

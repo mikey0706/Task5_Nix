@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Task5_Nix.Models;
 using Task5_Nix.ViewModels;
@@ -32,8 +31,8 @@ namespace Task5_Nix.Controllers
 
         public async Task<IActionResult> InitialPage() 
         {
-            var room =await _roomData.AllRooms();
-            var model = room.Select(d => new RoomInfo()
+             var room =await _roomData.AllRooms();
+            TempData["RoomsInfo"] = room.Select(d => new RoomInfo()
             {
                 Id = d.RoomId.ToString(),
                 RoomNumber = d.RoomNumber,
@@ -43,7 +42,7 @@ namespace Task5_Nix.Controllers
                 .LastOrDefault().Price
 
             });
-            return View(model);
+            return View();
         }
 
         [Authorize]
@@ -58,20 +57,11 @@ namespace Task5_Nix.Controllers
                     var ci = (ClaimsIdentity)HttpContext.User.Identity;
                     var k = ci.FindFirst(ClaimTypes.NameIdentifier);
 
-                    var data = _mapper.Map<VisitorDTO, VisitorViewModel>(_userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(k.Value)));
+                    var user = _mapper.Map<VisitorDTO, VisitorViewModel>(_userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(k.Value)));
 
-                    var room = await _roomData.UserRooms(data.VisitorName);
+                    var room = await _roomData.UserRooms(user.VisitorName);
 
-
-                    var model = new UserProfile()
-                    {
-                        Id = data.Id,
-                        VisitorName = data.VisitorName,
-                        PassportSeries = data.Passport.Substring(0,2),
-                        PassportNum = data.Passport.Substring(3)
-                    };
-
-                    model.UserRooms = room.Select(d => new RoomInfo()
+                    TempData["RoomsInfo"] = room.Select(d => new RoomInfo()
                     {
                         Id = d.RoomId.ToString(),
                         RoomNumber = d.RoomNumber,
@@ -83,7 +73,7 @@ namespace Task5_Nix.Controllers
 
                     });
 
-                    return View(model);
+                    return View(user);
                 }
                 return RedirectToAction("InitialPage");
             }
@@ -95,18 +85,17 @@ namespace Task5_Nix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VisitorProfile([FromForm] UserProfile data) 
+        public async Task<ActionResult> VisitorProfile([FromForm] VisitorViewModel data) 
         {
             try
             {
-                var user = _userData.AllVisitors().FirstOrDefault(d=>d.Id.Equals(data.Id));
+                var exists = _userData.AllVisitors().FirstOrDefault(d=>d.Id.Equals(data.Id));
 
-                if (user!=null)
+                if (exists!=null)
                 {
-                    user.VisitorName = data.VisitorName;
-                    user.Passport = $"{data.PassportSeries}-{data.PassportNum}";
+                    var res = _mapper.Map<VisitorViewModel, VisitorDTO>(data);
 
-                    await _userData.EditUser(user);
+                    await _userData.EditUser(res);
 
                     return RedirectToAction("InitialPage");
                 }

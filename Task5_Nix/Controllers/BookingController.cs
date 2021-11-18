@@ -76,7 +76,6 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> BookRoom([FromForm]BookRoomVM data) 
         {
             try 
@@ -134,7 +133,6 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditBooking([FromForm] BookRoomVM data) 
         {
             try

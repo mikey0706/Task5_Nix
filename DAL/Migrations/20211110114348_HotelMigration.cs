@@ -239,34 +239,34 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "6cc728d8-0333-4f00-a0ae-787ca49e316e", "d66f1d1b-fb87-4a10-bc97-4f2fc01606d5", "admin", "admin" });
+                values: new object[] { "d4b4d6d2-8661-4424-96c7-536d2c528db3", "b8206897-683d-4bac-9a01-bacd4ab3b0e2", "admin", "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Passport", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName", "VisitorName", "isAdmin" },
-                values: new object[] { "3d7f5b47-80ff-4053-ad27-4c08a2d4b169", 0, "cde31f97-1cff-4a8f-80ac-b43698f9a3b8", "Visitor", null, false, false, null, null, null, null, "AQAAAAEAACcQAAAAEJlr0YWEhs+MP1CGEYxf2EUWWqGsXsUP1J4r/j7Z3zm+XVC+UmNSN6iqXrlg60ZLBw==", null, false, "69631002-b61f-41e2-8ab3-9c9f35903419", false, null, "Admin", true });
+                values: new object[] { "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17", 0, "87953e8c-ae5d-46ed-b8ba-9c8e21349d1e", "Visitor", null, false, false, null, null, null, null, "AQAAAAEAACcQAAAAEDf9HDabtSTQ7FG2LNo+eNXXz1gSQN0unSk4r8eWZ+H4RVzKAV1LSUbM0QgajBWHAw==", null, false, "b7ae5cc6-8ce1-4f6a-bc32-764d2e527914", false, null, "Admin", true });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName" },
                 values: new object[,]
                 {
-                    { new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"), "Lux" },
-                    { new Guid("d1898851-efc1-452d-8565-16591b0f92ca"), "Middle" }
+                    { new Guid("96413316-ead3-40bc-9579-24666c7c1651"), "Lux" },
+                    { new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"), "Middle" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "6cc728d8-0333-4f00-a0ae-787ca49e316e", "3d7f5b47-80ff-4053-ad27-4c08a2d4b169" });
+                values: new object[] { "d4b4d6d2-8661-4424-96c7-536d2c528db3", "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17" });
 
             migrationBuilder.InsertData(
                 table: "CategoryDates",
                 columns: new[] { "CatDateId", "CategoryFK", "EndDate", "Price", "StartDate" },
                 values: new object[,]
                 {
-                    { new Guid("9afc4b05-7ec2-4898-9ef3-53f8cae90e8e"), new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 2099, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("0559cda5-23e1-423f-af4d-748fe642333a"), new Guid("d1898851-efc1-452d-8565-16591b0f92ca"), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 1099, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { new Guid("aec940d8-a8bf-4931-a57d-9bdcafa1139c"), new Guid("96413316-ead3-40bc-9579-24666c7c1651"), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 2099, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("740c3797-9d41-422f-b92b-efa06ba53877"), new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 1099, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -274,25 +274,25 @@ namespace DAL.Migrations
                 columns: new[] { "RoomId", "CategoryFK", "RoomNumber" },
                 values: new object[,]
                 {
-                    { new Guid("042a583a-5c05-44a6-ba78-fd41762a1b2b"), new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"), 1 },
-                    { new Guid("5adbc35e-2ed9-49c5-8f13-9e73ef13a3c2"), new Guid("0b1f57fa-7440-4ed4-a032-37f17557d2df"), 2 },
-                    { new Guid("8001fea4-cd45-4567-a971-799845fa4ebd"), new Guid("d1898851-efc1-452d-8565-16591b0f92ca"), 3 }
+                    { new Guid("74453052-d402-4e46-aab6-4be444548939"), new Guid("96413316-ead3-40bc-9579-24666c7c1651"), 1 },
+                    { new Guid("24333ab5-4b0b-4de4-a79e-de64e0b9ecae"), new Guid("96413316-ead3-40bc-9579-24666c7c1651"), 2 },
+                    { new Guid("7995c775-423b-4d7a-951f-435f8fcf3704"), new Guid("fd267699-9025-4c5e-a9d6-515bc1406368"), 3 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "BookingId", "CheckedIn", "MoveIn", "MoveOut", "RoomFK", "VisitorFK" },
-                values: new object[] { new Guid("9a8e8124-8bfb-45eb-b599-59e20c93ff32"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("042a583a-5c05-44a6-ba78-fd41762a1b2b"), "3d7f5b47-80ff-4053-ad27-4c08a2d4b169" });
+                values: new object[] { new Guid("c825bc5e-5d66-45c5-a6dc-48264f20a325"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("74453052-d402-4e46-aab6-4be444548939"), "49c6f583-0688-4ed0-a6b8-ebb3d83c3e17" });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "BookingId", "CheckedIn", "MoveIn", "MoveOut", "RoomFK", "VisitorFK" },
-                values: new object[] { new Guid("0c259969-6f58-4423-b4ec-13bb3c38ab84"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("5adbc35e-2ed9-49c5-8f13-9e73ef13a3c2"), null });
+                values: new object[] { new Guid("38e22402-fc4e-4597-b327-19e16c2f98ba"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("24333ab5-4b0b-4de4-a79e-de64e0b9ecae"), null });
 
             migrationBuilder.InsertData(
                 table: "Bookings",
                 columns: new[] { "BookingId", "CheckedIn", "MoveIn", "MoveOut", "RoomFK", "VisitorFK" },
-                values: new object[] { new Guid("ee8101f3-0e54-447e-aa95-dbbbd1870f1a"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("8001fea4-cd45-4567-a971-799845fa4ebd"), null });
+                values: new object[] { new Guid("55caf5b3-4c4c-49ab-9b31-ed1daf66a9b7"), false, new DateTime(2021, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2021, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("7995c775-423b-4d7a-951f-435f8fcf3704"), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

@@ -57,7 +57,6 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateRoom([FromForm]RoomCreateModel data)
         {
             try
@@ -105,7 +104,6 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditRoom([FromForm] RoomCreateModel data) 
         {
             try

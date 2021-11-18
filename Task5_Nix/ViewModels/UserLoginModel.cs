@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task5_Nix.ViewModels
 {
-    public class UserLoginModel :IRegistrationData
+    public class UserLoginModel 
     {
         private string defRole = "user";
 
