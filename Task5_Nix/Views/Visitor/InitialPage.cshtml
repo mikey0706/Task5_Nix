@@ -1,16 +1,16 @@
-﻿@model BookingViewModel
+﻿@model IEnumerable<Task5_Nix.ViewModels.RoomInfo>
 @{
     ViewData["Title"] = "InitialPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Html.AntiForgeryToken()
 <form asp-controller="Room" asp-action="RoomsList" data-ajax-method="post"
       data-ajax="true" data-ajax-update="#Results">
     <div class="form-group">
         <input type="date" name="date" />
     </div>
-<input type="submit" value="Поиск" class="btn btn-primary" />
-<div id="Results">
-    @{await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", TempData["RoomsInfo"]);}
-</div>
+    <input type="submit" value="Поиск" class="btn btn-primary" />
 </form>
-
+<div id="Results">
+    @{await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", Model);}
+</div>

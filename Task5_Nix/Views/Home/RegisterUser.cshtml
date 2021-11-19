@@ -10,37 +10,39 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="RegisterUser" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @Html.AntiForgeryToken()
+        @using (Html.BeginForm("RegisterUser", "Home", FormMethod.Post))
+        {
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+                @Html.LabelFor(m => m.UserName, "Имя пользователя: ", new { @class = "control-label" })
+                @Html.EditorFor(m => m.UserName, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label asp-for="PassportSeries" class="control-label"></label>
-                <input asp-for="PassportSeries" class="form-control" />
-                <span asp-validation-for="PassportSeries" class="text-danger"></span>
+                @Html.LabelFor(m => m.PassportSeries, "Серия паспорта: ", new { @class = "control-label" })
+                @Html.EditorFor(m => m.PassportSeries, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PassportSeries, null, new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label asp-for="PassportNum" class="control-label"></label>
-                <input asp-for="PassportNum" class="form-control" />
-                <span asp-validation-for="PassportNum" class="text-danger"></span>
+                @Html.LabelFor(m => m.PassportNum, "Номер паспорта: ", new { @class = "control-label" })
+                @Html.EditorFor(m => m.PassportNum, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PassportNum, null, new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                @Html.LabelFor(m => m.Password, "Пароль: ", new { @class = "control-label" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label asp-for="RepeatPassword" class="control-label"></label>
-                <input asp-for="RepeatPassword" class="form-control" />
-                <span asp-validation-for="RepeatPassword" class="text-danger"></span>
+                @Html.LabelFor(m => m.RepeatPassword, "Повторите пароль: ", new { @class = "control-label" })
+                @Html.PasswordFor(m => m.RepeatPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.RepeatPassword, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Зарегистрироваться" class="btn btn-primary" />
             </div>
-        </form>
+        }
     </div>
 </div>
 

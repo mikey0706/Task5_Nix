@@ -32,7 +32,7 @@ namespace Task5_Nix.Controllers
         {
             var rooms = await _roomData.UserRooms("Admin");
             
-            var model = rooms.Select(d => new RoomInfo()
+            var data = rooms.Select(d => new RoomInfo()
             {
                 RoomNumber = d.RoomNumber,
                 RoomCategory = _categoryData.AllCategories()
@@ -43,11 +43,12 @@ namespace Task5_Nix.Controllers
 
             });
 
-            var mod = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories());
-
-            ViewData["Profit"] = _bookingData.GetProfit();
-            TempData["Categories"] = mod;
-
+            var model = new AdminPage()
+            {
+                AdminRooms = data,
+                MonthProfit = _bookingData.GetProfit(),
+                Categories = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories())
+        };
             return View(model);
         }
     }

@@ -1,4 +1,4 @@
-﻿@model Task5_Nix.Models.VisitorViewModel
+﻿@model Task5_Nix.ViewModels.VisitorProfile
 
 @{
     ViewData["Title"] = "VisitorProfile";
@@ -11,33 +11,45 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="VisitorProfile" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @Html.HiddenFor(m => m.Id, Model.Id)
-            </div>
-            <div class="form-group">
-                <label asp-for="VisitorName" class="control-label"></label>
-                <input asp-for="VisitorName" class="form-control" />
-                <span asp-validation-for="VisitorName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Passport" class="control-label"></label>
-                <input asp-for="Passport" class="form-control" />
-                <span asp-validation-for="Passport" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        <div class="col-md-4">
+
+            @Html.AntiForgeryToken()
+
+            @using (Html.BeginForm("VisitorProfile", "Visitor", FormMethod.Post))
+            {
+                <div class="form-group">
+                    @Html.HiddenFor(m => m.Id, Model.Id)
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.VisitorName, "Имя пользователя: ", new { @class = "control-label" })
+                    @Html.EditorFor(m => m.VisitorName, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.VisitorName, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PassportSeries, "Серия паспорта: ", new { @class = "control-label" })
+                    @Html.EditorFor(m => m.PassportSeries, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.PassportSeries, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PassportNum, "Номер паспорта: ", new { @class = "control-label" })
+                    @Html.EditorFor(m => m.PassportNum, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.PassportNum, null, new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Редактировать профиль" class="btn btn-primary" />
+                </div>
+            }
+        </div>
     </div>
 </div>
-
 @Html.ActionLink("Удалить аккаунт", "DeleteAccount", "Visitor", new { userId = Model.Id}, new { id= "userId" })
 
 <h5>Ваши заказы: </h5>
 
-@{ await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", TempData["RoomsInfo"]);}
+@{ await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", Model.VisitorRooms);}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -40,6 +40,8 @@ namespace Task5_Nix
         {
             services.AddRazorPages();
 
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<HotelAppContext>(options => {
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"),
@@ -65,7 +67,7 @@ namespace Task5_Nix
 
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IRegistrationService, RegistrationService>();
 
             services.AddScoped<ICategoryDate, CategoryDateService>();
 

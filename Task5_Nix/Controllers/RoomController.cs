@@ -17,17 +17,20 @@ namespace Task5_Nix.Controllers
     {
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
+        private readonly ICategoryDate _dateCategory;
         private readonly IMapper _mapper;
 
-        public RoomController(IRoomService rs, ICategoryService cs)
+        public RoomController(IRoomService rs, ICategoryService cs, ICategoryDate cd)
         {
             _roomData = rs;
             _categoryData = cs;
+            _dateCategory = cd;
             _mapper = new Mapper(AutomapperConfig.Config);
         }
 
         [HttpPost]
-        public async Task<ActionResult> RoomsList(DateTime date) 
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RoomsList([FromForm]DateTime date) 
         {
             var room = await _roomData.RoomsByDate(date);
 
@@ -37,10 +40,7 @@ namespace Task5_Nix.Controllers
                 Id = d.RoomId.ToString(),
                 RoomNumber = d.RoomNumber,
                 RoomCategory = d.RoomCategory.CategoryName,
-                Price = _categoryData.AllCategories()
-                .FirstOrDefault(c=>c.CategoryId==d.CategoryFK).CategoryDate
-                .LastOrDefault().Price
-
+                Price = _dateCategory.AllCatDate().LastOrDefault(c=>c.CategoryFK==d.CategoryFK).Price
             });
 
             return PartialView(model);
@@ -57,6 +57,7 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateRoom([FromForm]RoomCreateModel data)
         {
             try
@@ -104,6 +105,7 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditRoom([FromForm] RoomCreateModel data) 
         {
             try

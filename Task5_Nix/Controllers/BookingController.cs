@@ -53,7 +53,9 @@ namespace Task5_Nix.Controllers
         {
             try 
             {
-               
+                if (User.Identity.IsAuthenticated)
+                {
+
                     var c = await _categoryData.FindCategory(roomId);
                     var r = await _roomData.AllRooms();
 
@@ -65,7 +67,9 @@ namespace Task5_Nix.Controllers
                     };
 
                     return View(model);
-              
+                }
+
+                return RedirectToAction("RegisterUser", "Home");
 
             }
             catch (Exception ex)
@@ -76,12 +80,12 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> BookRoom([FromForm]BookRoomVM data) 
         {
             try 
             {
-            if (User.Identity.IsAuthenticated)
-            {
+
                 var ci = (ClaimsIdentity)HttpContext.User.Identity;
                 var k = ci.FindFirst(ClaimTypes.NameIdentifier);
                 
@@ -96,9 +100,7 @@ namespace Task5_Nix.Controllers
                     await _bookingData.AddBooking(bk);
 
                 return RedirectToAction("InitialPage", "Visitor");
-             }
 
-                return RedirectToAction("RegisterUser", "Home");
             }
             catch (Exception ex)
             {
@@ -133,6 +135,7 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditBooking([FromForm] BookRoomVM data) 
         {
             try

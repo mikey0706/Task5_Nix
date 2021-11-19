@@ -23,10 +23,10 @@ namespace Task5_Nix.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IUserService _userData;
-        private readonly ITokenService _tokenService;
+        private readonly IRegistrationService _tokenService;
         private readonly IMapper _mapper;
 
-        public HomeController(IConfiguration config, ITokenService tokenService, IUserService us)
+        public HomeController(IConfiguration config, IRegistrationService tokenService, IUserService us)
         {
             _config = config;
             _userData = us;
@@ -59,8 +59,7 @@ namespace Task5_Nix.Controllers
 
                     await _userData.AddUser(_mapper.Map<VisitorViewModel, VisitorDTO>(v), data.Password);
 
-                    var tokenString = _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
-                    HttpContext.Session.SetString("Token", tokenString);
+                    _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
                     return RedirectToAction("InitialPage", "Visitor");
 
 
@@ -87,7 +86,7 @@ namespace Task5_Nix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserLoginModel data)
+        public async Task<IActionResult> Login([FromForm]UserLoginModel data)
         {
             try { 
             if (ModelState.IsValid)
@@ -102,8 +101,7 @@ namespace Task5_Nix.Controllers
 
                         data.UserId = user.Id.ToString();
           
-                        var tokenString = _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
-                        HttpContext.Session.SetString("Token", tokenString);
+                         _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
                         return RedirectToAction("InitialPage", "Visitor");
                     }
 
@@ -125,12 +123,8 @@ namespace Task5_Nix.Controllers
         public async Task<IActionResult> Logout()
         {
             try { 
-            await HttpContext.SignOutAsync();
 
-            foreach (var cookie in Request.Cookies.Keys)
-            {
-                Response.Cookies.Delete(cookie);
-            }
+            await _tokenService.DeleteCookies();
 
             return RedirectToAction("InitialPage", "Visitor");
             }

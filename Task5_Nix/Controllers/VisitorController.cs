@@ -19,30 +19,31 @@ namespace Task5_Nix.Controllers
         private readonly IUserService _userData;
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
+        private readonly ICategoryDate _dateCategory;
         private readonly IMapper _mapper;
 
-        public VisitorController (IUserService us, IRoomService rs, ICategoryService cs)
+        public VisitorController (IUserService us, IRoomService rs, ICategoryService cs, ICategoryDate cd)
         {
             _userData = us;
             _roomData = rs;
             _categoryData = cs;
+            _dateCategory = cd;
             _mapper = new Mapper(AutomapperConfig.Config);
         }
 
+        [HttpGet]
         public async Task<IActionResult> InitialPage() 
         {
              var room =await _roomData.AllRooms();
-            TempData["RoomsInfo"] = room.Select(d => new RoomInfo()
+            var model = room.Select(d => new RoomInfo()
             {
                 Id = d.RoomId.ToString(),
                 RoomNumber = d.RoomNumber,
                 RoomCategory = d.RoomCategory.CategoryName,
-                Price = _categoryData.AllCategories()
-                .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryDate
-                .LastOrDefault().Price
+                Price = _dateCategory.AllCatDate().LastOrDefault(c => c.CategoryFK == d.CategoryFK).Price
 
             });
-            return View();
+            return View(model);
         }
 
         [Authorize]
@@ -57,23 +58,28 @@ namespace Task5_Nix.Controllers
                     var ci = (ClaimsIdentity)HttpContext.User.Identity;
                     var k = ci.FindFirst(ClaimTypes.NameIdentifier);
 
-                    var user = _mapper.Map<VisitorDTO, VisitorViewModel>(_userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(k.Value)));
+                    var user = _userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(k.Value));
 
-                    var room = await _roomData.UserRooms(user.VisitorName);
+                    var data = await _roomData.UserRooms(user.VisitorName);
 
-                    TempData["RoomsInfo"] = room.Select(d => new RoomInfo()
+                    var rooms = data.Select(d => new RoomInfo()
                     {
                         Id = d.RoomId.ToString(),
                         RoomNumber = d.RoomNumber,
                         RoomCategory = _categoryData.AllCategories()
                             .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryName,
-                        Price = _categoryData.AllCategories()
-                            .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryDate
-                            .LastOrDefault().Price
+                        Price = _dateCategory.AllCatDate().LastOrDefault(c => c.CategoryFK == d.CategoryFK).Price
 
                     });
-
-                    return View(user);
+                    var model = new VisitorProfile()
+                    {
+                        Id = user.Id,
+                        VisitorName = user.VisitorName,
+                        PassportSeries = user.Passport.Substring(0,2),
+                        PassportNum = user.Passport.Substring(3),
+                        VisitorRooms = rooms
+                    };
+                    return View(model);
                 }
                 return RedirectToAction("InitialPage");
             }
@@ -85,17 +91,18 @@ namespace Task5_Nix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VisitorProfile([FromForm] VisitorViewModel data) 
+        public async Task<ActionResult> VisitorProfile([FromForm] VisitorProfile data) 
         {
             try
             {
-                var exists = _userData.AllVisitors().FirstOrDefault(d=>d.Id.Equals(data.Id));
+                var user = _userData.AllVisitors().FirstOrDefault(d=>d.Id.Equals(data.Id));
 
-                if (exists!=null)
+                if (user!=null)
                 {
-                    var res = _mapper.Map<VisitorViewModel, VisitorDTO>(data);
+                    user.VisitorName = data.VisitorName;
+                    user.Passport = $"{data.PassportSeries}-{data.PassportNum}";
 
-                    await _userData.EditUser(res);
+                    await _userData.EditUser(user);
 
                     return RedirectToAction("InitialPage");
                 }

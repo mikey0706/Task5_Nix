@@ -97,7 +97,7 @@ namespace BLL.Services
 
         public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime date) 
         {
-            var bks = _db.Bookings.GetData().Where(d=>d.MoveIn.Date > date.Date).Select(k=>k.RoomFK).Distinct();
+            var bks = _db.Bookings.GetData().Where(d=>d.MoveIn.Date > date.Date || d.MoveOut < date.Date).Select(k=>k.RoomFK).Distinct();
             var rooms = new List<Room>();
             foreach (var item in bks) 
             {

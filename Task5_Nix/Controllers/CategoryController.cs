@@ -41,6 +41,7 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateCategory([FromForm]CategoryCreateModel data) 
         {
             try
@@ -105,6 +106,7 @@ namespace Task5_Nix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCategory([FromForm]CategoryCreateModel data) 
         {
             try
