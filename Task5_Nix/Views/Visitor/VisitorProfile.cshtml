@@ -5,51 +5,87 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>VisitorProfile</h1>
+<h1>Профиль пользователя: @User.Identity.Name</h1>
 
-<h4>VisitorViewModel</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <div class="col-md-4">
+    <div class="col-m-5 offset-4 pt-4">
 
-            @Html.AntiForgeryToken()
+        <form asp-controller="Visitor" asp-action="VisitorProfile" asp-antiforgery="true" method="post">
 
-            @using (Html.BeginForm("VisitorProfile", "Visitor", FormMethod.Post))
-            {
-                <div class="form-group">
-                    @Html.HiddenFor(m => m.Id, Model.Id)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id"/>
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Имя пользователя: </label>
+                <div class="col-sm-7">
+                    <input asp-for="VisitorName" class="form-control"/>
                 </div>
+                <span asp-validation-for="VisitorName" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.VisitorName, "Имя пользователя: ", new { @class = "control-label" })
-                    @Html.EditorFor(m => m.VisitorName, null, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.VisitorName, null, new { @class = "text-danger" })
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Серия паспорта: </label>
+                <div class="col-sm-3">
+                    <input asp-for="PassportSeries" class="form-control"/>
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.PassportSeries, "Серия паспорта: ", new { @class = "control-label" })
-                    @Html.EditorFor(m => m.PassportSeries, null, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.PassportSeries, null, new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.PassportNum, "Номер паспорта: ", new { @class = "control-label" })
-                    @Html.EditorFor(m => m.PassportNum, null, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.PassportNum, null, new { @class = "text-danger" })
-                </div>
+                <span asp-validation-for="PassportSeries" class="text-danger"></span>
+            </div>
 
-
-                <div class="form-group">
-                    <input type="submit" value="Редактировать профиль" class="btn btn-primary" />
+            <div class="row mb-10 mb-4">
+                <label class="col-sm-5 control-label">Номер паспорта: </label>
+                <div class="col-sm-7">
+                    <input asp-for="PassportNum" class="form-control"/>
                 </div>
-            }
-        </div>
+                <span asp-validation-for="PassportNum" class="text-danger"></span>
+            </div>
+                
+             <ul class="navbar-nav d-inline-block pl-5">
+                 <li>
+                     <input type="submit" value="Редактировать профиль" class="btn btn-primary" />
+                 </li>
+                 <li class="btn btn-primary rounded w-100 h-25 mt-3 mb-3">
+                     @Html.ActionLink("Удалить аккаунт", "DeleteAccount", "Visitor", new { userId = Model.Id }, new { id = "userId", @class = "text-light" })
+                 </li>
+             </ul>
+
+        </form>
     </div>
 </div>
-@Html.ActionLink("Удалить аккаунт", "DeleteAccount", "Visitor", new { userId = Model.Id}, new { id= "userId" })
 
 <h5>Ваши заказы: </h5>
 
-@{ await Html.RenderPartialAsync("~/Views/Room/RoomsList.cshtml", Model.VisitorRooms);}
+<div class="mw-100 ml-5 pl-5">
+
+        @foreach (var item in Model.VisitorRooms)
+        {
+            <div class="card d-inline-block w-25 mr-3 mb-3 ">
+                <div class="card-header align-items-center">
+                    <label class="control-label text-dark pt-2 mr-3">Номер комнаты:</label>
+                    <label class="control-label text-dark pt-2 ml-5 font-weight-bold"> @item.RoomNumber</label>
+                </div>
+
+                <div class="card-text">
+                    <fieldset>
+                        <label class="control-label text-dark pl-3">Описание комнаты:</label>
+                        <label class="control-label text-dark float-right pr-3"> @item.RoomCategory</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <label class="control-label text-dark pl-3">Цена комнаты:</label>
+                        <label class="control-label text-dark float-right pr-3"> @item.Price </label>
+                    </fieldset>
+                </div>
+
+                <ul class="navbar-nav align-items-center">
+
+                    <li class="btn btn-secondary text-light rounded w-50 h-25 mb-3">
+                        @Html.ActionLink("Удалить заказ", "DeleteBooking", "Booking", new { delId = item.BookingId }, new { id = "delId", @class = "text-light" })
+                    </li>
+
+                </ul>
+            </div>
+        }
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -46,7 +46,8 @@ namespace Task5_Nix.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+
+                if (ModelState.IsValid && data.EndDate.Date>DateTime.Now.Date)
                 {
                     var c = new CategoryDTO()
                     {
@@ -57,9 +58,9 @@ namespace Task5_Nix.Controllers
 
                     return RedirectToAction("AdminMainPage", "Admin");
                 }
-                ModelState.AddModelError("", "Не все поля заполнены!");
+                ModelState.AddModelError("", $"Конечная дата должна быть позже чем: {DateTime.Now.Date}");
 
-                return View();
+                return View(data);
             } 
             catch (Exception ex)
             {
@@ -120,7 +121,7 @@ namespace Task5_Nix.Controllers
                         CategoryName = data.CategoryName
                     };
 
-                    await _categoryData.EditCategory(c, data.StartDate.Value, data.EndDate.Value, data.Price);
+                    await _categoryData.EditCategory(c, data.StartDate.Date, data.EndDate.Date, data.Price);
 
                     return RedirectToAction("AdminMainPage", "Admin");
                 }

@@ -73,6 +73,18 @@ namespace BLL.Services
             }
         }
 
+        public IEnumerable<BookingDTO> UserBookings(string userId) 
+        {
+            var ids = _db.Visitors.GetData().FirstOrDefault(d => d.Id.Equals(userId)).BookingOrders.Select(i => i.BookingId);
+            List<Booking> res = new List<Booking>();
+            foreach (var item in ids) 
+            {
+                res.Add(_db.Bookings.GetData().FirstOrDefault(d=>d.BookingId==item));
+            }
+
+            return mapper.Map<IEnumerable<Booking>, IEnumerable<BookingDTO>>(res.ToList());
+        }
+
         public int GetProfit() 
         {
 

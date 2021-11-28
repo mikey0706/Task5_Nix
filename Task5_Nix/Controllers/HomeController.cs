@@ -44,9 +44,14 @@ namespace Task5_Nix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterUser([FromForm]UserRegistrationModel data)
         {
-            try { 
+            try 
+            {
+
+            string res = "Пароли дложны совпадать";  
+                
             if (ModelState.IsValid && data.Password.Equals(data.RepeatPassword))
             {
+                
                 if (data != null)
                 {
                     data.UserId = Guid.NewGuid().ToString();
@@ -57,18 +62,19 @@ namespace Task5_Nix.Controllers
                         Passport = $"{data.PassportSeries}-{data.PassportNum}"
                     };
 
-                    await _userData.AddUser(_mapper.Map<VisitorViewModel, VisitorDTO>(v), data.Password);
+                    res = await _userData.AddUser(_mapper.Map<VisitorViewModel, VisitorDTO>(v), data.Password);
 
-                    _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
-                    return RedirectToAction("InitialPage", "Visitor");
+                    if (res.Equals(string.Empty))
+                        {
 
+                            _tokenService.GenerateJSONWebToken(_config["Jwt:Key"], _config["Jwt:Issuer"], data);
 
+                            return RedirectToAction("InitialPage", "Visitor");
+                     }
                 }
-
-                ModelState.AddModelError("", "Имя пользователя или пароль введены не верно!");
-
             }
 
+            ModelState.AddModelError("", res);
             return View(data);
 
             }

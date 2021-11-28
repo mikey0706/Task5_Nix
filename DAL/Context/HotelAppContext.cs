@@ -14,7 +14,6 @@ namespace DAL.Context
     {
         public HotelAppContext(DbContextOptions<HotelAppContext> options) : base(options)
         {
-            Database.Migrate();
         }
 
         public DbSet<Visitor> Visitors { get; set; }
@@ -30,6 +29,21 @@ namespace DAL.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<Visitor>().HasMany(d => d.BookingOrders)
+                .WithOne(o => o.BookingVisitor);
+
+            builder.Entity<Room>().HasMany(d => d.RoomBooking)
+                .WithOne(rb => rb.RoomBooking);
+
+            builder.Entity<Category>().HasMany(d => d.CategoryRoom)
+                .WithOne(cr => cr.RoomCategory).IsRequired();
+
+            builder.Entity<Category>().HasMany(d => d.CategoryDate)
+                .WithOne(cd => cd.GetCategory).IsRequired();
+
+           
 
             var user = new Visitor()
             {
@@ -115,28 +129,16 @@ namespace DAL.Context
             r2.CategoryFK = mid.CategoryId;
 
 
-            builder.Entity<Visitor>().HasMany(d => d.BookingOrders)
-                .WithOne(o => o.BookingVisitor);
-
-            builder.Entity<Room>().HasMany(d => d.RoomBooking)
-                .WithOne(rb => rb.RoomBooking);
-
-            builder.Entity<Category>().HasMany(d => d.CategoryRoom)
-                .WithOne(cr => cr.RoomCategory).IsRequired();
-
-            builder.Entity<Category>().HasMany(d => d.CategoryDate)
-                .WithOne(cd => cd.GetCategory).IsRequired();
-
-            builder.Entity<IdentityRole>().HasData(role);
+     
 
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
                     RoleId = role.Id,
                     UserId = user.Id
-                }
-                );
+                });
 
+            builder.Entity<IdentityRole>().HasData(role);
             builder.Entity<Visitor>().HasData(user);
             builder.Entity<Room>().HasData(r, r1, r2);
             builder.Entity<Booking>().HasData(b, b2, b3);

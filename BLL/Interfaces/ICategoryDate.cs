@@ -10,8 +10,6 @@ namespace BLL.Interfaces
     public interface ICategoryDate
     {
         public IEnumerable<CategoryDateDTO> AllCatDate();
-        public Task AddCatDate(CategoryDateDTO data);
-        public Task DeleteCatDate(CategoryDateDTO data);
-        public Task EditCatDate(Guid id, CategoryDateDTO data);
+        public CategoryDateDTO FindCategory(Guid id);
     }
 }

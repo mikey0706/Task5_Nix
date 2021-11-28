@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Task5_Nix.Controllers;
 using Task5_Nix.Utils;
 
 namespace Task5_Nix
@@ -38,6 +40,7 @@ namespace Task5_Nix
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddRazorPages();
 
             services.AddHttpContextAccessor();
@@ -142,7 +145,6 @@ namespace Task5_Nix
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Visitor}/{action=InitialPage}/{id?}");
-                endpoints.MapRazorPages();
             });
         }
     }

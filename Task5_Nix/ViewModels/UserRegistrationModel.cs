@@ -9,6 +9,7 @@ namespace Task5_Nix.ViewModels
     public class UserRegistrationModel : UserLoginModel
     {
         [Required]
+        [DataType(DataType.Password)]
         public string RepeatPassword { get; set; }
 
         [Required]

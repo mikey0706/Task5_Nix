@@ -11,7 +11,7 @@ namespace BLL.Interfaces
     {
         public List<VisitorDTO> AllVisitors();
 
-        public Task AddUser(VisitorDTO user, string password);
+        public Task<string> AddUser(VisitorDTO user, string password);
 
         public BookingDTO VisitorBookingInfo(BookingDTO data);
 

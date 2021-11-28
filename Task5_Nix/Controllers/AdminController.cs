@@ -18,30 +18,23 @@ namespace Task5_Nix.Controllers
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
         private readonly IBookingService _bookingData;
+        private readonly ICategoryDate _dateCategory;
         private readonly IMapper _mapper;
 
-        public AdminController(IRoomService rs, ICategoryService cs, IBookingService bs)
+        public AdminController(IRoomService rs, ICategoryService cs, IBookingService bs, ICategoryDate cd)
         {
             _roomData = rs;
             _categoryData = cs;
             _bookingData = bs;
+            _dateCategory = cd;
             _mapper = new Mapper(AutomapperConfig.Config);
         }
 
         public async Task<ActionResult> AdminMainPage() 
         {
             var rooms = await _roomData.UserRooms("Admin");
-            
-            var data = rooms.Select(d => new RoomInfo()
-            {
-                RoomNumber = d.RoomNumber,
-                RoomCategory = _categoryData.AllCategories()
-                .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryName,
-                Price = _categoryData.AllCategories()
-                .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryDate
-                .LastOrDefault().Price
 
-            });
+            var data = rooms.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
 
             var model = new AdminPage()
             {

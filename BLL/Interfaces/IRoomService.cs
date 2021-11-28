@@ -14,6 +14,6 @@ namespace BLL.Interfaces
         public Task EditRoom(RoomDTO data);
         public Task DeleteRoom(string roomId);
         public Task<IEnumerable<RoomDTO>> UserRooms(string name);
-        public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime date);
+        public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime dateIn, DateTime dateOut);
     }
 }

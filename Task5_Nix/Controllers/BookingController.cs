@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Task5_Nix.Models;
+using Task5_Nix.Utils;
 using Task5_Nix.ViewModels;
 
 namespace Task5_Nix.Controllers
@@ -20,12 +21,14 @@ namespace Task5_Nix.Controllers
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
         private readonly IBookingService _bookingData;
+        private readonly IRegistrationService _registered;
 
-        public BookingController(IUserService us, IRoomService rs, ICategoryService cs, IBookingService bs)
+        public BookingController(IUserService us, IRoomService rs, ICategoryService cs, IBookingService bs, IRegistrationService reg)
         {
             _userData = us;
             _roomData = rs;
             _categoryData = cs;
+            _registered = reg;
             _bookingData = bs;
         }
 
@@ -85,27 +88,53 @@ namespace Task5_Nix.Controllers
         {
             try 
             {
+                var exists = _bookingData.AllBookings().FirstOrDefault(d=>d.MoveIn.Date==data.MoveIn.Date && 
+                d.MoveOut.Date==data.MoveOut.Date);
 
-                var ci = (ClaimsIdentity)HttpContext.User.Identity;
-                var k = ci.FindFirst(ClaimTypes.NameIdentifier);
-                
-                var bk = new BookingDTO()
+                if (ModelState.IsValid && exists == null)
                 {
-                    VisitorFK = k.Value,
-                    RoomFK = data.RoomFK,
-                    MoveIn = data.MoveIn,
-                    MoveOut = data.MoveOut
-                };
+                    var bk = new BookingDTO()
+                    {
+                        VisitorFK = _registered.GetCurrentUserId(),
+                        RoomFK = data.RoomFK,
+                        MoveIn = data.MoveIn,
+                        MoveOut = data.MoveOut
+                    };
 
                     await _bookingData.AddBooking(bk);
 
-                return RedirectToAction("InitialPage", "Visitor");
+                    return RedirectToAction("InitialPage", "Visitor");
+                }
+
+                ModelState.AddModelError("","Данная комната занята на указанное Вами время.");
+
+                return View(data);
 
             }
             catch (Exception ex)
             {
                 throw ex.InnerException;
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteBooking(string delId)
+        {
+            try
+            {
+                await _bookingData.DeleteBooking(delId);
+                if (User.IsInRole("admin"))
+                {
+                    return RedirectToAction("AdminMainPage", "Admin");
+                }
+
+                return RedirectToAction("VisitorProfile", "Visitor");
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+
         }
 
         [Authorize(Roles = "admin")]
@@ -140,25 +169,32 @@ namespace Task5_Nix.Controllers
         {
             try
             {
+                var res = "Не все поля заполнены!";
                 if (ModelState.IsValid)
                 {
                     var r = await _roomData.AllRooms();
 
-                    var bk = new BookingDTO() 
+                    var exists = r.FirstOrDefault(d=>d.RoomNumber==data.RoomNumber);
+
+                    if (exists!=null) 
                     {
-                        BookingId = Guid.Parse(data.BookingId),
-                        RoomFK = r.FirstOrDefault(d=>d.RoomNumber == data.RoomNumber).RoomId,
-                        VisitorFK = data.VisitorFk,
-                        MoveIn = data.MoveIn,
-                        MoveOut = data.MoveOut,
-                        CheckedIn = data.CheckedIn
-                    };
+                        var bk = new BookingDTO()
+                        {
+                            BookingId = Guid.Parse(data.BookingId),
+                            RoomFK = r.FirstOrDefault(d => d.RoomNumber == data.RoomNumber).RoomId,
+                            VisitorFK = data.VisitorFk,
+                            MoveIn = data.MoveIn,
+                            MoveOut = data.MoveOut,
+                            CheckedIn = data.CheckedIn
+                        };
 
-                    await _bookingData.EditBooking(bk);
+                        await _bookingData.EditBooking(bk);
 
-                    return RedirectToAction("AdminMainPage", "Admin");
+                        return RedirectToAction("AdminMainPage", "Admin");
+                    }
+                    res = "Такой комнаты не существует.";
                 }
-                ModelState.AddModelError("", "Не все поля заполнены!");
+                ModelState.AddModelError("", res);
 
                 return View();
             }
@@ -168,19 +204,6 @@ namespace Task5_Nix.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeleteBooking(string delId) 
-        {
-            try 
-            {
-                await _bookingData.DeleteBooking(delId);
-                return RedirectToAction("AdminMainPage", "Admin");
-            }
-            catch (Exception ex)
-            {
-                throw ex.InnerException;
-            }
-
-        }
+      
     }
 }

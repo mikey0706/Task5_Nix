@@ -49,6 +49,12 @@ namespace Task5_Nix.Utils
             _accessor.HttpContext.Session.SetString("Token", new JwtSecurityTokenHandler().WriteToken(token));
         }
 
+        public string GetCurrentUserId() 
+        {
+            var ci = (ClaimsIdentity)_accessor.HttpContext.User.Identity;
+            return ci.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
         public async Task DeleteCookies() 
         {
             await _manager.SignOutAsync();

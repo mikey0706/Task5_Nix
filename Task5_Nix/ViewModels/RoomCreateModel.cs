@@ -21,7 +21,13 @@ namespace Task5_Nix.ViewModels
 
         public RoomCreateModel(IEnumerable<CategoryViewModel> items)
         {
-            Categories = items.Select(s => new SelectListItem { Text = s.CategoryName, Value = s.CategoryId.ToString() }); ;
+            Categories = items.Select(s => new SelectListItem { Text = s.CategoryName, Value = s.CategoryId.ToString()}); 
+        }
+
+        public RoomCreateModel(IEnumerable<CategoryViewModel> items, CategoryViewModel selected)
+        {
+            Categories = items.Select(s => new SelectListItem { Text = s.CategoryName, Value = s.CategoryId.ToString(), Selected = (s.CategoryId==selected.CategoryId)});
+            
         }
     }
 }

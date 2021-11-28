@@ -15,7 +15,9 @@ namespace Task5_Nix.ViewModels
         [Required]
         public string UserName { get; set; }
 
+        
         [Required]
+        [DataType(DataType.Password)]
         [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", ErrorMessage ="Пароль должен быть минимум 8 символов и состоять из чисел и букв")]
         public string Password { get; set; }
 

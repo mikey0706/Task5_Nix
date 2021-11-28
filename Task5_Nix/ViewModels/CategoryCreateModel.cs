@@ -12,9 +12,9 @@ namespace Task5_Nix.ViewModels
         [Required]
         public string CategoryName { get; set; }
 
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [Required]
         public int Price { get; set; }

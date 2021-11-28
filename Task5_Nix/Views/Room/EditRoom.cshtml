@@ -10,31 +10,32 @@
 <h4>RoomCreateModel</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        @Html.AntiForgeryToken()
-        @using (Html.BeginForm("EditRoom", "Room", FormMethod.Post))
-        {
-            <div class="form-group">
-                @Html.HiddenFor(m => m.RoomId, Model.RoomId)
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.RoomNumber, "Имя пользователя: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.RoomNumber, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.RoomNumber, null, new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.CurrentCategory, "Текущая категория: ", new { @class = "control-label" })
-                @Html.LabelFor(m => m.CurrentCategory, Model.CurrentCategory, new { @class = "control-label" })
-            </div>
-            <div class="form-group">
-                @Html.DropDownListFor(m => m.CategoryID, Model.Categories)
-                @Html.ValidationMessageFor(m => m.CategoryID, null, new { @class = "text-danger" })
-            </div>
+    <div class="col-m-12">
+        <form asp-controller="Room" asp-action="EditRoom" asp-antiforgery="true" method="post">
 
             <div class="form-group">
-                <input type="submit" value="Изменить" class="btn btn-primary" />
+                <input type="hidden" asp-for="RoomId" />
             </div>
-        }
+
+            <div class="row md-10 mb-4">
+                <label class="control-label text-dark pt-2 mr-3">Номер комнаты:</label>
+                <div class="col-sm-7 ">
+                    <input asp-for="RoomNumber" class="form-control w-50" />
+                </div>
+                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+            </div>
+
+            <div class="row md-10 mb-4">
+                <label class="control-label text-dark pt-2 mr-3">Текущая категория: </label>
+                <options class="mt-2">
+                    <select asp-for="CategoryID" asp-items="Model.Categories"></select>
+                </options>
+                <span asp-validation-for="CategoryID" class="text-danger"></span>
+            </div>
+
+
+            <input type="submit" value="Создать" class="btn btn-primary offset-2" />
+        </form>
     </div>
 </div>
 

@@ -5,25 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>BookingList</h1>
+<h1 class="offset-4 pb-3">Список заказов:</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VisitorName)
+                <label>Имя пользователя</label>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoomNumber)
+                <label>Номер комнаты</label>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MoveIn)
+                <label>Дата заезда</label>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MoveOut)
+                <label>Дата выезда</label>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckedIn)
+                <label>Посетитель отметился: </label>
             </th>
             <th></th>
         </tr>
@@ -32,16 +32,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.VisitorName)
+                <label>@item.VisitorName</label>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RoomNumber)
+                <label>@item.RoomNumber</label>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MoveIn)
+                <label>@item.MoveIn</label>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MoveOut)
+                <label>@item.MoveOut</label>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CheckedIn)

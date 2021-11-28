@@ -13,6 +13,8 @@ namespace BLL.Interfaces
         public Task AddBooking(BookingDTO data);
         public Task EditBooking(BookingDTO data);
         public Task DeleteBooking(string bkId);
+
+        public IEnumerable<BookingDTO> UserBookings(string userId);
         public int GetProfit();
     }
 }

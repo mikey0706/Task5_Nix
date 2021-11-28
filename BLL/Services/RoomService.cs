@@ -37,7 +37,12 @@ namespace BLL.Services
                 r.RoomCategory = c;
                 _db.Rooms.Add(r);
                 await _db.Save(); 
-                _db.Bookings.Add(new Booking { RoomFK = r.RoomId});
+                _db.Bookings.Add(new Booking 
+                { 
+                    RoomFK = r.RoomId,
+                    MoveIn = DateTime.Now.Date,
+                    MoveOut = DateTime.Now.Date
+                });
                 await _db.Save();
             }
             catch (Exception ex)
@@ -95,9 +100,9 @@ namespace BLL.Services
             return Task.Run(() => res);
         }
 
-        public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime date) 
+        public Task<IEnumerable<RoomDTO>> RoomsByDate(DateTime dateIn, DateTime dateOut) 
         {
-            var bks = _db.Bookings.GetData().Where(d=>d.MoveIn.Date > date.Date || d.MoveOut < date.Date).Select(k=>k.RoomFK).Distinct();
+            var bks = _db.Bookings.GetData().Where(d => d.MoveIn.Date > dateIn.Date || d.MoveOut < dateIn.Date).Select(k => k.RoomFK).Distinct();
             var rooms = new List<Room>();
             foreach (var item in bks) 
             {

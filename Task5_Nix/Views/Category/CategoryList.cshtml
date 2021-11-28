@@ -1,34 +1,27 @@
 ﻿@model IEnumerable<Task5_Nix.Models.CategoryViewModel>
 
-<p>
-    @Html.ActionLink("Создать категорию", "CreateCategory", "Category")
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditCategory", "Category", new { key= item.CategoryId}, new { id="key"}) |
-                @Html.ActionLink("Delete", "DeleteCategory", "Category", new { keyId = item.CategoryId }, new { id = "keyId" })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="col w-50 ml-5 pl-5">
+    @foreach (var item in Model)
+    {
+    <div class="card row mb-3 ">
+        <div class="card-text ">
+
+            <label>Название категории: </label>
+            <label class="control-label text-dark pt-2 ml-5 mr-5 font-weight-bold">@item.CategoryName</label>
+
+            <ul class="navbar-nav d-inline ml-5 float-right">
+                <li class="btn-secondary rounded pl-3 pt-2 pb-2 pr-3 d-inline-block ">
+                    @Html.ActionLink("Edit", "EditCategory", "Category", new { key = item.CategoryId }, new { id = "key", @class = "text-light" })
+                </li>
+                <li class="btn-secondary rounded pl-3 pt-2 pb-2 pr-3 d-inline-block">
+                    @Html.ActionLink("Delete", "DeleteCategory", "Category", new { keyId = item.CategoryId }, new { id = "keyId", @class = "text-light" })
+                </li>
+            </ul>
+
+        </div>
+
+      
+    </div>
+ }
+    </div>

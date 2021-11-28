@@ -12,40 +12,22 @@ using Task5_Nix.ViewModels;
 
 namespace Task5_Nix.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "admin")]
     public class RoomController : Controller
     {
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
-        private readonly ICategoryDate _dateCategory;
         private readonly IMapper _mapper;
 
-        public RoomController(IRoomService rs, ICategoryService cs, ICategoryDate cd)
+        public RoomController(IRoomService rs, ICategoryService cs)
         {
             _roomData = rs;
             _categoryData = cs;
-            _dateCategory = cd;
             _mapper = new Mapper(AutomapperConfig.Config);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RoomsList([FromForm]DateTime date) 
-        {
-            var room = await _roomData.RoomsByDate(date);
 
-
-            var model = room.Select(d => new RoomInfo()
-            {
-                Id = d.RoomId.ToString(),
-                RoomNumber = d.RoomNumber,
-                RoomCategory = d.RoomCategory.CategoryName,
-                Price = _dateCategory.AllCatDate().LastOrDefault(c=>c.CategoryFK==d.CategoryFK).Price
-            });
-
-            return PartialView(model);
-        }
-        [Authorize(Roles = "admin")]
+        
         [HttpGet]
         public ActionResult CreateRoom()
         {
@@ -62,17 +44,31 @@ namespace Task5_Nix.Controllers
         {
             try
             {
+                var res = "Модель пуста!";
+
                 if (ModelState.IsValid)
                 {
-                    var id = _categoryData.AllCategories().FirstOrDefault(d => d.CategoryId.ToString().Equals(data.CategoryID)).CategoryId;
-                    var r = new RoomViewModel() { RoomNumber = data.RoomNumber, CategoryFK = id };
-                    
-                    await _roomData.AddRoom(_mapper.Map<RoomViewModel, RoomDTO>(r));
+                    var exists = await _roomData.AllRooms();
 
-                    return RedirectToAction("InitialPage", "Visitor");
+                    if (exists.FirstOrDefault(d => d.RoomNumber == data.RoomNumber) == null)
+                    {
+                        var id = _categoryData.AllCategories().FirstOrDefault(d => d.CategoryId.ToString().Equals(data.CategoryID)).CategoryId;
+                        var r = new RoomViewModel() { RoomNumber = data.RoomNumber, CategoryFK = id };
+
+                        await _roomData.AddRoom(_mapper.Map<RoomViewModel, RoomDTO>(r));
+
+                        return RedirectToAction("InitialPage", "Visitor");
+                    }
+
+                    res = "Комната с таким номером уже существует.";
                 }
-                ModelState.AddModelError("", "Модель пуста!");
-                return View();
+
+                ModelState.AddModelError("", res);
+
+                var categories = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories());
+                data = new RoomCreateModel(categories);
+
+                return View(data);
             }
             catch (Exception ex)
             {
@@ -84,12 +80,13 @@ namespace Task5_Nix.Controllers
         public async Task<ActionResult> EditRoom(string key) 
         {
             try 
-            { 
+            {
+                
             var rooms = await _roomData.AllRooms();
             var room = rooms.FirstOrDefault(d=>d.RoomId == Guid.Parse(key));
             var categories = _mapper.Map<IEnumerable<CategoryDTO>, IEnumerable<CategoryViewModel>>(_categoryData.AllCategories());
-            
-            var model = new RoomCreateModel(categories) 
+            var selected = _mapper.Map<CategoryDTO, CategoryViewModel>(room.RoomCategory);
+            var model = new RoomCreateModel(categories, selected) 
             {
                 RoomId = room.RoomId.ToString(),
                 RoomNumber = room.RoomNumber,
@@ -120,6 +117,7 @@ namespace Task5_Nix.Controllers
 
                     return RedirectToAction("InitialPage", "Visitor");
                 }
+
                 ModelState.AddModelError("", "Не все поля заполнены!");
 
                 return View();

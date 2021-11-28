@@ -9,6 +9,7 @@ namespace BLL.DTO
     public class CategoryDateDTO
     {
         public Guid CatDateId { get; set; }
+
         public Guid CategoryFK { get; set; }
 
         public virtual CategoryDTO GetCategory { get; set; }

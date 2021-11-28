@@ -9,50 +9,50 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        @Html.AntiForgeryToken()
-        @using (Html.BeginForm("EditBooking", "Booking", FormMethod.Post))
-        {
-            <div class="form-group">
-                @Html.HiddenFor(m => m.BookingId, Model.BookingId)
-            </div>
+    <div class="col-m-12">
+        <form asp-controller="Booking" asp-action="EditBooking" asp-antiforgery="true" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                @Html.HiddenFor(m => m.VisitorFk, Model.VisitorFk)
+                <input type="hidden" asp-for="BookingId" />
+                <input type="hidden" asp-for="VisitorFk" />
+                <input type="hidden" asp-for="RoomFK" />
             </div>
 
-            <div class="form-group">
-                @Html.HiddenFor(m => m.RoomFK, Model.RoomFK)
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Номер комнаты:</label>
+                <div class="col-sm-7">
+                    <input asp-for="RoomNumber" class="form-control" />
+                </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.RoomNumber, "Номер комнаты: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.RoomNumber, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.RoomNumber, null, new { @class = "text-danger" })
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Дата заезда:</label>
+                <div class="col-sm-7">
+                    <input asp-for="MoveIn" class="form-control" />
+                </div>
+                <span asp-validation-for="MoveIn" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.MoveIn, "Дата заезда: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.MoveIn, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.MoveIn, null, new { @class = "text-danger" })
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Дата выезда:</label>
+                <div class="col-sm-7">
+                    <input asp-for="MoveOut" class="form-control" />
+                </div>
+                <span asp-validation-for="MoveOut" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.MoveOut, "Дата выезда: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.MoveOut, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.MoveOut, null, new { @class = "text-danger" })
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Отметить пользователя :</label>
+                <div class="col-sm-2">
+                    <input asp-for="CheckedIn" class="form-control" />
+                </div>
             </div>
 
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    @Html.CheckBoxFor(m => m.CheckedIn, Model.CheckedIn)
-                    @Html.DisplayNameFor(model => model.CheckedIn)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Изменить" class="btn btn-primary" />
-            </div>
-        }
+            <input type="submit" value="Изменить" class="btn btn-primary" />
+
+        </form>
     </div>
 </div>
 

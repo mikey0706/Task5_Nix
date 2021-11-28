@@ -18,5 +18,7 @@ namespace Task5_Nix.ViewModels
         public DateTime MoveOut { get; set; }
 
         public bool CheckedIn { get; set; }
+
+        public int Price { get; set; }
     }
 }

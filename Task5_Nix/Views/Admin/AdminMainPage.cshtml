@@ -11,16 +11,22 @@
 
 @await Html.PartialAsync("~/Views/Room/RoomsList.cshtml", Model.AdminRooms)
 
-<p>Выручка за последний месяц - @Model.MonthProfit</p>
+<label class="ml-1">Выручка за последний месяц - @Model.MonthProfit</label>
+<div class="row ml-1">
+    <ul class="navbar-nav d-inline">
+        <li class="nav-item text-light d-inline-block btn-primary rounded mr-3 pl-3 pt-3 pb-3">
+            @Html.ActionLink("Создать комнату", "CreateRoom", "Room", null, new { @class = "text-light mr-3" })
+        </li>
+        <li class="nav-item text-light d-inline-block btn-primary rounded mr-3  pl-3 pt-3 pr-3 pb-3">
+            @Html.ActionLink("Просмотреть забронированные номера", "BookingList", "Booking", null, new { @class = "text-light " })
+        </li>
+        <li class="nav-item text-light d-inline-block btn-primary rounded pl-3 pt-3 pr-3 pb-3">
+            @Html.ActionLink("Создать категорию", "CreateCategory", "Category", null, new { @class = "text-light " })
+        </li>
+    </ul>
+</div>
 
-<p>
-    @Html.ActionLink("Создать комнату", "CreateRoom", "Room") |
-    @Html.ActionLink("Просмотреть забронированные номера", "BookingList", "Booking")
-</p>
-
-<br>
-<h5> Список существующих категорий: </h5>
-<br>
+<label class="mt-3 ml-1">Список существующих категорий:</label>
 
 @await Html.PartialAsync("~/Views/Category/CategoryList.cshtml", Model.Categories)
 

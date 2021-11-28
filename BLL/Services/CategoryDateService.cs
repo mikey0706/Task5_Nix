@@ -26,50 +26,10 @@ namespace BLL.Services
             return mapper.Map<IEnumerable<CategoryDate>, IEnumerable<CategoryDateDTO>>(_db.CategoryDates.GetData());
         }
 
-        public async Task AddCatDate(CategoryDateDTO data)
+        public CategoryDateDTO FindCategory(Guid id) 
         {
-            try 
-            { 
-            var b = mapper.Map<CategoryDateDTO, CategoryDate>(data);
-            _db.CategoryDates.Add(b);
-            await _db.Save();
-            }
-            catch (Exception ex)
-            {
-                throw ex.InnerException;
-            }
-
-        }
-
-        public async Task DeleteCatDate(CategoryDateDTO data)
-        {
-            try { 
-
-                var b = mapper.Map<CategoryDateDTO, CategoryDate>(data);
-                _db.CategoryDates.Delete(b);
-                await _db.Save();
-            }
-            catch (Exception ex)
-            {
-                throw ex.InnerException;
-            }
-
-        }
-
-        public async Task EditCatDate(Guid id, CategoryDateDTO data)
-        {
-            try
-            {
-
-                var user = mapper.Map<CategoryDateDTO, CategoryDate>(data);
-                _db.CategoryDates.Update(user);
-                await _db.Save();
-            }
-            catch (Exception ex)
-            {
-              throw  ex.InnerException;
-            }
-
+            var res = _db.CategoryDates.GetData().LastOrDefault(c => c.CategoryFK == id);
+            return mapper.Map<CategoryDate, CategoryDateDTO>(res);
         }
     }
 }

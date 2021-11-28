@@ -5,48 +5,65 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>UserRegistration</h1>
+<h1 class="offset-4 pl-5">Регистрация</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        @Html.AntiForgeryToken()
-        @using (Html.BeginForm("RegisterUser", "Home", FormMethod.Post))
-        {
-            <div class="form-group">
-                @Html.LabelFor(m => m.UserName, "Имя пользователя: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.UserName, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.PassportSeries, "Серия паспорта: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.PassportSeries, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.PassportSeries, null, new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.PassportNum, "Номер паспорта: ", new { @class = "control-label" })
-                @Html.EditorFor(m => m.PassportNum, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.PassportNum, null, new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Password, "Пароль: ", new { @class = "control-label" })
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.RepeatPassword, "Повторите пароль: ", new { @class = "control-label" })
-                @Html.PasswordFor(m => m.RepeatPassword, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.RepeatPassword, null, new { @class = "text-danger" })
+    <div class="col-m-5 offset-4 pt-4">
+
+        <form asp-controller="Home" asp-action="RegisterUser" asp-antiforgery="true" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Имя пользователя: </label>
+                <div class="col-sm-7">
+                    <input asp-for="UserName" class="form-control"/>
+                </div>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+             </div>
+
+            <div class="row md-10 mb-4">
+                <label class="col-sm-5 control-label">Серия паспорта: </label>
+                <div class="col-sm-3">
+                    <input asp-for="PassportSeries" class="form-control"/>
+                 </div>
+                 <span asp-validation-for="PassportSeries" class="text-danger"></span>
+             </div>
+
+            <div class="row mb-10 mb-4">
+                <label class="col-sm-5 control-label">Номер паспорта: </label>
+                <div class="col-sm-7">
+                    <input asp-for="PassportNum" class="form-control"/>
+                </div>
+                <span asp-validation-for="PassportNum" class="text-danger"></span>
+             </div>
+
+            <div class="row mb-10 mb-4">
+                <label class="col-sm-5 control-label">Пароль: </label>
+                <div class="col-sm-7">
+                    <input asp-for="Password" class="form-control"/>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <input type="submit" value="Зарегистрироваться" class="btn btn-primary" />
-            </div>
-        }
+            <div class="row mb-10 mb-4">
+                <label class="col-sm-5 control-label">Повторите пароль: </label>
+                <div class="col-sm-7">
+                    <input asp-for="RepeatPassword" class="form-control"/>
+                 </div>
+                <span asp-validation-for="RepeatPassword" class="text-danger"></span>
+             </div>
+
+
+             <input type="submit" value="Зарегистрироваться" class="btn btn-primary offset-4" />
+
+</form>
+
     </div>
 </div>
 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

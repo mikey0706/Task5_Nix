@@ -28,21 +28,29 @@ namespace BLL.Services
             return mapper.Map<List<Visitor>, List<VisitorDTO>>(_db.Visitors.GetData().ToList());
         }
 
-        public async Task AddUser(VisitorDTO user, string password)
+        public async Task<string> AddUser(VisitorDTO user, string password)
         {
             try 
-            { 
-                 var v = mapper.Map<VisitorDTO, Visitor>(user);
-                 v.PasswordHash = new PasswordHasher<Visitor>().HashPassword(v, password);
-                 _db.Visitors.Add(v);
-                 await _db.Save();
+            {
+                var v = mapper.Map<VisitorDTO, Visitor>(user);
+
+                var exists = _db.Visitors.GetData().FirstOrDefault(u=>u.VisitorName.Equals(user.VisitorName));
+
+                if (exists==null)
+                {
+                    v.PasswordHash = new PasswordHasher<Visitor>().HashPassword(v, password);
+                    _db.Visitors.Add(v);
+                    await _db.Save();
+
+                    return string.Empty;
+                }
+
+                return "Такой пользователь уже существует в системе";
             }
             catch (Exception ex)
             {
                 throw ex.InnerException;
             }
-
-
         }
 
         public async Task<VisitorDTO> VerifyUser(string name, string password)

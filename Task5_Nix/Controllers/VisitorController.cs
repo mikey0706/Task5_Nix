@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Task5_Nix.Models;
+using Task5_Nix.Utils;
 using Task5_Nix.ViewModels;
 
 namespace Task5_Nix.Controllers
@@ -20,57 +21,70 @@ namespace Task5_Nix.Controllers
         private readonly IRoomService _roomData;
         private readonly ICategoryService _categoryData;
         private readonly ICategoryDate _dateCategory;
-        private readonly IMapper _mapper;
+        private readonly IRegistrationService _registered;
+        private readonly IBookingService _bookingService;
 
-        public VisitorController (IUserService us, IRoomService rs, ICategoryService cs, ICategoryDate cd)
+        public VisitorController (IUserService us, IRoomService rs, ICategoryService cs, ICategoryDate cd, IRegistrationService reg, IBookingService bs)
         {
             _userData = us;
             _roomData = rs;
             _categoryData = cs;
             _dateCategory = cd;
-            _mapper = new Mapper(AutomapperConfig.Config);
+            _registered = reg;
+            _bookingService = bs;
         }
 
         [HttpGet]
         public async Task<IActionResult> InitialPage() 
         {
-             var room =await _roomData.AllRooms();
-            var model = room.Select(d => new RoomInfo()
-            {
-                Id = d.RoomId.ToString(),
-                RoomNumber = d.RoomNumber,
-                RoomCategory = d.RoomCategory.CategoryName,
-                Price = _dateCategory.AllCatDate().LastOrDefault(c => c.CategoryFK == d.CategoryFK).Price
+            var data=await _roomData.AllRooms();
+            var rooms = data.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
+            var model = new InitialPageView() { Rooms = rooms };
 
-            });
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> InitialPage([FromForm] InitialPageView data)
+        {
+            if (data.CheckIn.Date < DateTime.Now.Date || data.CheckOut.Date < data.CheckIn.Date) 
+            {
+                ModelState.AddModelError("","Вы ввели некорректную дату.");
+
+                var roomsList = await _roomData.AllRooms();
+                var rooms = roomsList.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
+                data.Rooms = rooms;
+
+                return View(data);
+            }
+            var room = await _roomData.RoomsByDate(data.CheckIn, data.CheckOut);
+
+            var model = new InitialPageView();
+            model.Rooms = room.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
+
+            return View(model);
+
         }
 
         [Authorize]
 
         [HttpGet]
-        public async Task<ActionResult> VisitorProfile()
+        public ActionResult VisitorProfile()
         {
             try
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    var ci = (ClaimsIdentity)HttpContext.User.Identity;
-                    var k = ci.FindFirst(ClaimTypes.NameIdentifier);
+                    var id = _registered.GetCurrentUserId();
+                    
+                    var user = _userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(id));
 
-                    var user = _userData.AllVisitors().FirstOrDefault(d => d.Id.Equals(k.Value));
+                    var data = _bookingService.UserBookings(id);
 
-                    var data = await _roomData.UserRooms(user.VisitorName);
+                    var rooms = data.Select(d => new RoomInfo(d.RoomBooking, _dateCategory.FindCategory(d.RoomBooking.CategoryFK),
+                        _categoryData) { BookingId = d.BookingId });
 
-                    var rooms = data.Select(d => new RoomInfo()
-                    {
-                        Id = d.RoomId.ToString(),
-                        RoomNumber = d.RoomNumber,
-                        RoomCategory = _categoryData.AllCategories()
-                            .FirstOrDefault(c => c.CategoryId == d.CategoryFK).CategoryName,
-                        Price = _dateCategory.AllCatDate().LastOrDefault(c => c.CategoryFK == d.CategoryFK).Price
-
-                    });
                     var model = new VisitorProfile()
                     {
                         Id = user.Id,
@@ -94,10 +108,11 @@ namespace Task5_Nix.Controllers
         public async Task<ActionResult> VisitorProfile([FromForm] VisitorProfile data) 
         {
             try
-            {
+            { 
                 var user = _userData.AllVisitors().FirstOrDefault(d=>d.Id.Equals(data.Id));
+                var name = _userData.AllVisitors().FirstOrDefault(d => d.VisitorName.Equals(data.VisitorName));
 
-                if (user!=null)
+                if (user!=null & name==null)
                 {
                     user.VisitorName = data.VisitorName;
                     user.Passport = $"{data.PassportSeries}-{data.PassportNum}";
@@ -107,9 +122,17 @@ namespace Task5_Nix.Controllers
                     return RedirectToAction("InitialPage");
                 }
 
-                ModelState.AddModelError("", "Такой пользователь не найден");
+                var books= _bookingService.UserBookings(data.Id);
 
-                return View();
+                var rooms = books.Select(d => new RoomInfo(d.RoomBooking, _dateCategory.FindCategory(d.RoomBooking.CategoryFK),
+                    _categoryData)
+                { BookingId = d.BookingId });
+
+                data.VisitorRooms = rooms;
+
+                ModelState.AddModelError("", "Это имя занято.");
+
+                return View(data);
 
             }
             catch (Exception ex)
