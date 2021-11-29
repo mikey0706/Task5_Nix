@@ -66,6 +66,8 @@ namespace Task5_Nix.Controllers
                     {
                         RoomFK = Guid.Parse(roomId),
                         RoomNumber = r.FirstOrDefault(d => d.RoomId == Guid.Parse(roomId)).RoomNumber,
+                        MoveIn = DateTime.Now.Date,
+                        MoveOut = DateTime.Now.Date,
                         Price = c.CategoryDate.LastOrDefault().Price
                     };
 

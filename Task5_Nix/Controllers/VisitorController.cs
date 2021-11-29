@@ -39,7 +39,11 @@ namespace Task5_Nix.Controllers
         {
             var data=await _roomData.AllRooms();
             var rooms = data.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
-            var model = new InitialPageView() { Rooms = rooms };
+            var model = new InitialPageView() { 
+                Rooms = rooms,
+                CheckIn = DateTime.Now.Date,
+                CheckOut = DateTime.Now.Date
+            };
 
             return View(model);
         }
@@ -48,22 +52,25 @@ namespace Task5_Nix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> InitialPage([FromForm] InitialPageView data)
         {
-            if (data.CheckIn.Date < DateTime.Now.Date || data.CheckOut.Date < data.CheckIn.Date) 
+            if (data.CheckIn.Date > DateTime.Now.Date || data.CheckOut.Date > data.CheckIn.Date)
             {
-                ModelState.AddModelError("","Вы ввели некорректную дату.");
+                var room = await _roomData.RoomsByDate(data.CheckIn, data.CheckOut);
 
-                var roomsList = await _roomData.AllRooms();
-                var rooms = roomsList.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
-                data.Rooms = rooms;
-
-                return View(data);
+                var model = new InitialPageView() 
+                {
+                    Rooms = room.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData))
+                };
+                return View(model);
+                
             }
-            var room = await _roomData.RoomsByDate(data.CheckIn, data.CheckOut);
 
-            var model = new InitialPageView();
-            model.Rooms = room.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
+            ModelState.AddModelError("", "Вы ввели некорректную дату.");
 
-            return View(model);
+            var roomsList = await _roomData.AllRooms();
+            var rooms = roomsList.Select(d => new RoomInfo(d, _dateCategory.FindCategory(d.CategoryFK), _categoryData));
+            data.Rooms = rooms;
+
+            return View(data);
 
         }
 
