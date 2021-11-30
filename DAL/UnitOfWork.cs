@@ -1,4 +1,5 @@
 ﻿using DAL.Context;
+using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
 using System;
@@ -24,7 +25,7 @@ namespace DAL
             db = _db;
         }
 
-        public BookingRepository Bookings
+        public IDataRepository<Booking> Bookings
         {
             get
             {
@@ -37,7 +38,7 @@ namespace DAL
             }
         }
 
-        public VisitorRepository Visitors
+        public IDataRepository<Visitor>Visitors
         {
             get
             {
@@ -50,7 +51,7 @@ namespace DAL
             }
         }
 
-        public RoomRepository Rooms
+        public IDataRepository<Room> Rooms
         {
             get
             {
@@ -63,7 +64,7 @@ namespace DAL
             }
         }
 
-        public CategoryRepository Categories
+        public IDataRepository<Category> Categories
         {
             get
             {
@@ -76,7 +77,7 @@ namespace DAL
             }
         }
 
-        public CategoryDateRepository CategoryDates
+        public IDataRepository<CategoryDate> CategoryDates
         {
             get
             {

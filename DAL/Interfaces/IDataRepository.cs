@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Interfaces
 {
-    public interface IDataRepository<T> where T : class
+    public interface IDataRepository<T>
     {
         public IEnumerable<T> GetData();
 
